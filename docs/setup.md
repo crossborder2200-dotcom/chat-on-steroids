@@ -14,6 +14,10 @@ Read the [responsible-use notice and provider rules](../README.md#responsible-us
 4. **Load the companion extension.** Press **Open extensions page** to open `chrome://extensions` in your ChatGPT browser and enable Developer mode. Press **Open extension folder**, which also copies the folder path, then choose **Load unpacked** and paste it. Pairing is automatic.
 5. **Start a task.** Choose a project and model in CoS, write your request and send it.
 
+**No Chrome needed:** in **Settings → Browser & history → ChatGPT browser**, choose **Built-in**. ChatGPT then runs in the app's own windows and the companion extension loads by itself, so step 4 becomes "sign in to ChatGPT once in the window **Open ChatGPT** shows". Signing in with Google may be refused in an embedded browser; email sign-in works.
+
+**Several ChatGPT accounts:** with the built-in browser, **Settings → Browser & history → ChatGPT account** keeps each account signed in separately. Add an account, sign in once, then switch between them. A plugin created in one account's ChatGPT is not visible in another, so create the CoS apps in each account; pick the setup profile (tunnel) each account's plugins use and it switches with the account. To keep working on a session whose chat belongs to the other account, use **Continue in a new chat from this app's history** in the context menu next to Compact & resume. Switching accounts organizes your own work; it is not a way around usage limits or restrictions (see the usage notice above).
+
 Want screen and keyboard control? Enable **Desktop** permissions and connect its separate app. On macOS, also grant Screen Recording and Accessibility in System Settings.
 
 **After an update:** reload the companion extension and refresh the CoS apps in ChatGPT when prompted. These are two separate steps.

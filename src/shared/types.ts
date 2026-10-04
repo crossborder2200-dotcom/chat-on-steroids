@@ -126,7 +126,8 @@ export interface TunnelSettings {
   binaryPath: string;
 }
 
-export const CHAT_BROWSERS = ['chrome', 'edge', 'brave'] as const;
+/** `embedded` is the built-in browser: ChatGPT in this app's own windows, no Chrome needed. */
+export const CHAT_BROWSERS = ['chrome', 'edge', 'brave', 'embedded'] as const;
 export type ChatBrowser = (typeof CHAT_BROWSERS)[number];
 
 export interface UiPrefs {
@@ -367,7 +368,17 @@ export interface ControlApiSettings {
   allowActions: boolean;
 }
 
+/** A ChatGPT sign-in kept by the built-in browser in its own persistent session. */
+export interface ChatAccount {
+  id: string;
+  name: string;
+  /** Setup profile (tunnel IDs and key) this account's ChatGPT plugins use; switched together. */
+  setupProfileId?: string;
+}
+
 export interface Config {
+  /** Built-in browser accounts. Absent means one Default account. */
+  chatAccounts?: { active: string; list: ChatAccount[] };
   /** Inactive setups only. Keys remain in encrypted secret slots addressed by profile ID. */
   setupProfiles?: Array<{ id: string; name: string; tunnelId: string; desktopTunnelId: string; pluginsTunnelId: string }>;
   roots: Root[];

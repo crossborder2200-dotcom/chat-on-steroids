@@ -73,7 +73,7 @@ import { keychainNoticeReady } from './keychain-notice.js';
 import { runDiagnostics } from './diagnostics.js';
 import { readRecentLog, renderDiagnosticsReport, saveDiagnosticsReport, systemFacts } from './diagnostics-report.js';
 import { listSessions } from './session/store.js';
-import { formatLogAsJson, formatLogForClipboard, getLog, logInfo, onLog } from './logger.js';
+import { formatLogAsJson, formatLogForClipboard, getLog, logInfo, logWarn, onLog } from './logger.js';
 import { RESERVED_ROOT_NAMES, uniqueRootName, validateNewRoot, SandboxError, resolvePath } from './sandbox.js';
 import { addProject, getSessionProject, listProjects, projectWorkspace, removeProject, setProjectColor } from './projects.js';
 import { createProjectEntry, listProjectDirectory, previewProjectFile, projectFileTarget, renameProjectEntry, revalidateProjectFileTarget, saveProjectTextFile } from './project-files.js';
@@ -82,6 +82,9 @@ import { ProjectGitWatchSet, readProjectGitDiff, readProjectGitSnapshot } from '
 import { hasSecret, isEncryptionAvailable, secureStorageStatus, setSecret } from './secrets.js';
 import { setupApiKeySlot } from '../shared/setup-profile.js';
 import { addSetupProfile, removeSetupProfile, switchSetupProfile } from './setup-profiles.js';
+import { addChatAccount, chatAccounts, linkChatAccountSetup, removeChatAccount, renameChatAccount, selectChatAccount } from './chat-accounts.js';
+import { clearEmbeddedAccountData, openInEmbeddedBrowser, showEmbeddedBrowser, syncEmbeddedBrowser } from './embedded-browser.js';
+import { CHAT_ACCOUNT_ID, isChatGptUrl } from './embedded-browser-policy.js';
 import { bundledVersion, locateBinary } from './tunnel/locate.js';
 import { TUNNEL_ID_PATTERN } from './tunnel/index.js';
 import {
@@ -90,7 +93,7 @@ import {
   companionDiagnostics,
   sessionInputActivity,
   recoveryInputAllowed,
-  sessionControlsFor, cancelAssistantRecovery, stopSessionTurn, setSessionAutomation, setSessionObjective, compactSession, cancelSessionCompaction,
+  sessionControlsFor, cancelAssistantRecovery, stopSessionTurn, setSessionAutomation, setSessionObjective, compactSession, cancelSessionCompaction, resumeSessionFromLocalHistory,
   cancelWorkerCommands,
   chatUrl,
   revealChatInBrowser,
@@ -559,6 +562,50 @@ export function registerIpc(getWindow: () => BrowserWindow | null, quitToInstall
     });
     return buildState();
   });
+  /**
+   * ChatGPT accounts of the built-in browser. The browser follows the committed choice: a
+   * switch closes the old account's windows and loads the companion into the new session,
+   * and a linked setup profile reconnects the tunnel in the same commit.
+   */
+  handle('accounts:change', async payload => {
+    const accountId = z.string().regex(CHAT_ACCOUNT_ID);
+    const request = z.discriminatedUnion('action', [
+      z.object({ action: z.literal('add'), name: z.string().trim().min(1).max(80) }),
+      z.object({ action: z.literal('select'), id: accountId }),
+      z.object({ action: z.literal('rename'), id: accountId, name: z.string().trim().min(1).max(80) }),
+      z.object({ action: z.literal('remove'), id: accountId }),
+      z.object({ action: z.literal('link'), id: accountId, setupProfileId: z.string().min(1).max(64).nullable() })
+    ]).parse(payload);
+    await updateConfig(config => {
+      switch (request.action) {
+        case 'add': return addChatAccount(config, request.name);
+        case 'select': return selectChatAccount(config, request.id);
+        case 'rename': return renameChatAccount(config, request.id, request.name);
+        case 'remove': return removeChatAccount(config, request.id);
+        case 'link': return linkChatAccountSetup(config, request.id, request.setupProfileId);
+      }
+    }, async (published, previous) => {
+      try {
+        // A removed account's sign-in and site data go with it.
+        if (request.action === 'remove') await clearEmbeddedAccountData(request.id);
+      } finally {
+        if (published.tunnel.profileEpoch !== previous.tunnel.profileEpoch) await applySettings();
+      }
+    });
+    await syncEmbeddedBrowser();
+    return buildState();
+  });
+  /** Signs the active account out of ChatGPT in the built-in browser by clearing its site data. */
+  handle('accounts:signOut', async () => {
+    await clearEmbeddedAccountData(chatAccounts(getConfig()).active);
+    await syncEmbeddedBrowser();
+    return buildState();
+  });
+  handle('browser:showEmbedded', async () => {
+    if (getConfig().ui.chatBrowser !== 'embedded') throw new Error('Choose the built-in browser in Settings first.');
+    await showEmbeddedBrowser();
+    return true;
+  });
   handle('usage:get', () => usageOverview());
   handle('state:get', async () => {
     const state = await buildState();
@@ -598,6 +645,9 @@ export function registerIpc(getWindow: () => BrowserWindow | null, quitToInstall
     // paints again. This is also the color Electron shows during any later renderer reload/failure.
     getWindow()?.setBackgroundColor(windowBackgroundForTheme(next.ui.theme, next.ui.appearance));
     refreshPetOverlayAppearance();
+    if (before.ui.chatBrowser !== next.ui.chatBrowser) {
+      syncEmbeddedBrowser().catch((error: Error) => logWarn(`built-in ChatGPT browser: ${error.message}`));
+    }
     if (
       before.goal.enabled !== next.goal.enabled ||
       // The mode is authority too: a draft started as a gate must not be typed after the user
@@ -1113,7 +1163,10 @@ export function registerIpc(getWindow: () => BrowserWindow | null, quitToInstall
   handle('link:open', async (payload) => {
     const { url } = z.object({ url: z.string().max(8192) }).parse(payload);
     if (!ALLOWED_LINKS.has(url) && !safeExternalLink(url)) throw new Error('That link is not allowed');
-    await shell.openExternal(url);
+    // ChatGPT pages (Plugins, settings) belong where the user is signed in to ChatGPT; with the
+    // built-in browser that is not the OS browser.
+    if (getConfig().ui.chatBrowser === 'embedded' && isChatGptUrl(url)) await openInEmbeddedBrowser(url);
+    else await shell.openExternal(url);
     return true;
   });
 
@@ -1207,6 +1260,7 @@ export function registerIpc(getWindow: () => BrowserWindow | null, quitToInstall
     return setSessionObjective(id, text, mode);
   });
   handle('sessions:compact', async (payload) => compactSession(sessionIdArg.parse(payload).id));
+  handle('sessions:resumeLocally', async (payload) => resumeSessionFromLocalHistory(sessionIdArg.parse(payload).id));
   handle('sessions:cancelCompaction', async (payload) => cancelSessionCompaction(sessionIdArg.parse(payload).id));
   handle('sessions:plan', async (payload) => {
     const { text, backend, requestId } = z.object({ text: z.string().trim().min(1).max(16000), backend: z.enum(['api', 'chatgpt']), requestId: z.string().uuid().optional() }).parse(payload);
@@ -1468,7 +1522,10 @@ export function registerIpc(getWindow: () => BrowserWindow | null, quitToInstall
    * page or the OS link handler, but accept one as a launch argument.
    */
   handle('bridge:openExtensionsPage', async () => {
-    await openInPreferredBrowser(extensionsPageUrl(getConfig().ui.chatBrowser ?? 'chrome'));
+    const browser = getConfig().ui.chatBrowser ?? 'chrome';
+    // The built-in browser loads the companion itself; it has no extensions page to visit.
+    if (browser === 'embedded') throw new Error('The built-in browser loads the extension automatically.');
+    await openInPreferredBrowser(extensionsPageUrl(browser));
     return true;
   });
 

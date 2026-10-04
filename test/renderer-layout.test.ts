@@ -25,9 +25,11 @@ let document: Document;
 let css = '';
 let chatSource = '';
 let browserPreferencesSource = '';
+let mainSource = '';
 
 beforeAll(async () => {
   browserPreferencesSource = await fs.readFile(path.join(process.cwd(), 'src', 'renderer', 'browser-preferences.ts'), 'utf8');
+  mainSource = await fs.readFile(path.join(process.cwd(), 'src', 'renderer', 'main.ts'), 'utf8');
   const [html, styles, chat] = await Promise.all([
     fs.readFile(path.join(process.cwd(), 'src', 'renderer', 'index.html'), 'utf8'),
     fs.readFile(path.join(process.cwd(), 'src', 'renderer', 'styles.css'), 'utf8'),
@@ -562,6 +564,12 @@ describe('the settings sheet', () => {
    */
   it('saves every field it shows', () => {
     const pane = document.querySelector('.view[data-view="settings"]')!;
+    // ChatGPT accounts are not settings-snapshot fields: each change is its own request
+    // (`accounts:change`), like setup profiles. Keep the exception explicit and prove each
+    // control is wired to that request.
+    const accountControls = new Set(['chatAccount', 'chatAccountName', 'chatAccountSetup']);
+    for (const id of accountControls) expect(mainSource, `#${id} is never wired`).toMatch(new RegExp(`\\$(?:<[^>]+>)?\\('${id}'\\)`));
+    expect(mainSource).toContain('api.changeChatAccount(');
     const listened = /const CHAT_INPUTS[^=]*=\s*\[([^\]]*)\]/.exec(chatSource);
     expect(listened, 'CHAT_INPUTS is gone or renamed').not.toBeNull();
     for (const input of pane.querySelectorAll<HTMLInputElement>('.pane input')) {
@@ -580,6 +588,7 @@ describe('the settings sheet', () => {
       // A credential is the one exception, and it is an exception on purpose: it is written
       // on blur through its own channel rather than saved with the settings snapshot, so
       // that a half-typed key never travels. It still has to be wired to something.
+      if (accountControls.has(input.id)) continue;
       if (input.type === 'password') {
         expect(chatSource, `#${input.id} is never read`).toContain(`$('${input.id}').addEventListener('blur'`);
         continue;
@@ -590,7 +599,7 @@ describe('the settings sheet', () => {
     for (const field of pane.querySelectorAll('select, textarea')) {
       // Interface language persists in the renderer; the event/storage behavior is
       // covered by renderer-i18n, independently of the app configuration channel.
-      if (field.id === 'uiLanguage') continue;
+      if (field.id === 'uiLanguage' || accountControls.has(field.id)) continue;
       expect(listened![1], `#${field.id} never saves`).toContain(`'${field.id}'`);
     }
   });

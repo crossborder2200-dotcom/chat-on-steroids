@@ -1080,6 +1080,123 @@ function paintSetupProfiles(next: AppState): void {
   $<HTMLButtonElement>('removeApiKey').disabled = setupProfileBusy || next.secureStorage?.available === false;
 }
 
+let chatAccountBusy = false;
+
+/** The built-in browser's accounts. Main owns the list; this only projects it and asks. */
+function paintChatAccounts(next: AppState): void {
+  const embedded = next.config.ui.chatBrowser === 'embedded';
+  for (const id of ['chatAccountsSetting', 'chatAccountManage', 'chatAccountSetupSetting']) $(id).hidden = !embedded;
+  $('embeddedBrowserSetup').hidden = !embedded;
+  $('extensionInstallSetup').hidden = embedded;
+  if (!embedded) return;
+  const accounts = next.config.chatAccounts ?? { active: 'default', list: [{ id: 'default', name: 'Default' }] };
+  const select = $<HTMLSelectElement>('chatAccount');
+  const signature = JSON.stringify(accounts.list.map(row => [row.id, row.name]));
+  if (select.dataset.accounts !== signature) {
+    select.replaceChildren(...accounts.list.map(row => {
+      const option = document.createElement('option');
+      option.value = row.id;
+      option.textContent = row.id === 'default' && row.name === 'Default' ? t('Default') : row.name;
+      return option;
+    }));
+    select.dataset.accounts = signature;
+  }
+  select.value = accounts.active;
+  const profiles = [{ id: next.config.tunnel.profileId ?? 'default', name: next.config.tunnel.profileName ?? t('Default') }, ...(next.config.setupProfiles ?? [])];
+  const setup = $<HTMLSelectElement>('chatAccountSetup');
+  const setupSignature = JSON.stringify(profiles);
+  if (setup.dataset.profiles !== setupSignature) {
+    const none = document.createElement('option');
+    none.value = '';
+    ui(none, 'textContent', () => t('Keep the current setup profile'));
+    setup.replaceChildren(none, ...profiles.map(profile => {
+      const option = document.createElement('option');
+      option.value = profile.id;
+      option.textContent = profile.name;
+      return option;
+    }));
+    setup.dataset.profiles = setupSignature;
+  }
+  setup.value = accounts.list.find(row => row.id === accounts.active)?.setupProfileId ?? '';
+  for (const id of ['chatAccount', 'chatAccountAdd', 'chatAccountRename', 'chatAccountSignOut', 'chatAccountSetup', 'chatAccountName']) {
+    ($(id) as HTMLInputElement).disabled = chatAccountBusy;
+  }
+  $<HTMLButtonElement>('chatAccountRemove').disabled = chatAccountBusy || accounts.list.length <= 1;
+  $<HTMLButtonElement>('chatAccountAdd').disabled = chatAccountBusy || accounts.list.length >= 12;
+}
+
+async function chatAccountRequest(request: () => Promise<AppState | null | undefined>): Promise<void> {
+  if (!state || chatAccountBusy) return;
+  chatAccountBusy = true; paintChatAccounts(state);
+  try {
+    await settingsSaveQueue;
+    const next = await request();
+    if (next) apply(next);
+  } finally {
+    chatAccountBusy = false;
+    if (state) paintChatAccounts(state);
+  }
+}
+
+function activeChatAccount(): string {
+  return state?.config.chatAccounts?.active ?? 'default';
+}
+
+function chatAccountName(): string | null {
+  const input = $<HTMLInputElement>('chatAccountName');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return null; }
+  return name;
+}
+
+$('chatAccount').addEventListener('change', () => {
+  const select = $<HTMLSelectElement>('chatAccount');
+  const id = select.value;
+  if (id === activeChatAccount()) return;
+  if (!window.confirm(t('Switch ChatGPT account? The ChatGPT windows of the current account close, and replies running there stop.'))) {
+    select.value = activeChatAccount();
+    return;
+  }
+  void chatAccountRequest(() => run(api.changeChatAccount({ action: 'select', id })));
+});
+$('chatAccountAdd').addEventListener('click', () => {
+  const name = chatAccountName();
+  if (!name) return;
+  void chatAccountRequest(async () => {
+    const next = await run(api.changeChatAccount({ action: 'add', name }));
+    if (next) {
+      $<HTMLInputElement>('chatAccountName').value = '';
+      // A new account has no sign-in yet; the window it needs opens right away.
+      void run(api.showEmbeddedBrowser());
+    }
+    return next;
+  });
+});
+$('chatAccountRename').addEventListener('click', () => {
+  const name = chatAccountName();
+  if (!name) return;
+  void chatAccountRequest(async () => {
+    const next = await run(api.changeChatAccount({ action: 'rename', id: activeChatAccount(), name }));
+    if (next) $<HTMLInputElement>('chatAccountName').value = '';
+    return next;
+  });
+});
+$('chatAccountRemove').addEventListener('click', () => {
+  if (!window.confirm(t('Remove this ChatGPT account? Its sign-in and site data are deleted. Your chats stay in ChatGPT and in this app.'))) return;
+  void chatAccountRequest(() => run(api.changeChatAccount({ action: 'remove', id: activeChatAccount() })));
+});
+$('chatAccountSignOut').addEventListener('click', () => {
+  if (!window.confirm(t('Sign out of ChatGPT in this account? Its ChatGPT windows close.'))) return;
+  void chatAccountRequest(() => run(api.signOutChatAccount()));
+});
+$('chatAccountSetup').addEventListener('change', () => {
+  const value = $<HTMLSelectElement>('chatAccountSetup').value;
+  void chatAccountRequest(() => run(api.changeChatAccount({ action: 'link', id: activeChatAccount(), setupProfileId: value || null })));
+});
+for (const id of ['chatAccountOpen', 'embeddedBrowserOpen']) {
+  $(id).addEventListener('click', () => void run(api.showEmbeddedBrowser()));
+}
+
 async function changeSetupProfile(action: 'add' | 'select' | 'remove', id?: string): Promise<void> {
   if (!state || setupProfileBusy) return;
   const nameInput = $<HTMLInputElement>('setupProfileName');
@@ -1318,6 +1435,7 @@ function apply(next: AppState): void {
   apiKey.disabled = !secureStorageAvailable;
   paintSetupFields();
   paintSetupProfiles(next);
+  paintChatAccounts(next);
   ui($('apiKeyState'), 'textContent', () => !secureStorageAvailable
     ? (next.secureStorage?.detail ?? t("Secure credential storage is unavailable."))
     : next.hasApiKey

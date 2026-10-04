@@ -1,3 +1,4 @@
+import { CHAT_ACCOUNT_ID } from './embedded-browser-policy.js';
 import { UI_LANGUAGES } from '../shared/ui-language.js';
 import { REASONING_EFFORTS } from '../shared/session.js';
 import { appearanceSchema } from './appearance-schema.js';
@@ -307,6 +308,16 @@ const configSchema = z.object({
     pluginsTunnelId: z.string().max(128).optional().default(''),
     binaryPath: z.string().max(4096)
   }),
+  chatAccounts: z.object({
+    active: z.string().regex(CHAT_ACCOUNT_ID),
+    list: z.array(z.object({
+      id: z.string().regex(CHAT_ACCOUNT_ID),
+      name: z.string().trim().min(1).max(80),
+      setupProfileId: z.string().min(1).max(64).optional()
+    })).min(1).max(12)
+  }).refine(accounts => new Set(accounts.list.map(row => row.id)).size === accounts.list.length, 'Duplicate ChatGPT account')
+    .refine(accounts => accounts.list.some(row => row.id === accounts.active), 'Active ChatGPT account is missing')
+    .optional().catch(undefined),
   setupProfiles: z.array(z.object({
     id: z.string().min(1).max(64), name: z.string().trim().min(1).max(80),
     tunnelId: z.string().max(128), desktopTunnelId: z.string().max(128), pluginsTunnelId: z.string().max(128)

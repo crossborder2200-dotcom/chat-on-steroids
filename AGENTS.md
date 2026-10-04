@@ -248,6 +248,7 @@ Paths in this section are repository-relative. Most mechanisms have `main`, `sha
 | Renderer boundary | `src/main/ipc.ts`, `edit-context-menu.ts`, `src/preload/index.ts`; `src/renderer/{main,chat,dom,tool-result,timeline-scroll,sidebar-resize,browser-preferences,i18n}.ts`, `locales/{es,zh-CN,zh-TW,ja,tr,fr,pt-PT}.json`, `index.html`, `styles.css`. |
 | Appearance | `src/shared/appearance.ts`, `src/main/appearance-schema.ts`, `src/renderer/appearance.ts`: bounded saved colors/typography, field-wise Settings merge, immediate semantic CSS projection. `window-layout.ts` shares native caption/backing colors. |
 | Native Desktop | `src/main/computer/{index,helper,browser-chords,windows-api,windows-capture,windows-apps,windows-keys}.ts`, `src/shared/windows-computer.ts`, `mcp/tools-desktop-{windows,macos}.ts`, `native/macos-desktop-helper/*`, `native/macos-desktop-addon/*`. |
+| Built-in browser | `src/main/embedded-browser.ts`, `embedded-browser-policy.ts`, `chat-accounts.ts`, `extension/embedded-host.js`: ChatGPT in the app's own windows, one persistent session per ChatGPT account, the companion staged into it, and the tab/window/debugger host its shim calls. |
 | Direct browser control | `src/main/browser-control.ts`, `mcp/tools-browser.ts`, `src/shared/browser-control.ts`, `extension/browser-control{,-page}.js`: short-lived RPCs, session-owned debugger tabs, bounded DOM/diagnostics and background input. |
 | Delivery/build | `src/main/{update,extension-path,version,logger,durable}.ts`, `electron.vite.config.ts`, `electron-builder.yml`, `scripts/*`, `.github/workflows/*`, `vitest.config.ts`. |
 
@@ -274,6 +275,8 @@ Paths in this section are repository-relative. Most mechanisms have `main`, `sha
 | Browser repair | `bridge.ts` process-memory episodes | Re-earn from live evidence; never restore an old reload token as action authority. |
 | Catalog/usage | Saved successful `chat-models`; derived `usage-cache`; live usage snapshot | Catalog is observation, not a send receipt; estimates are not provider billing. |
 | Connector refresh | `plugin-refresh.ts` / `state/plugin-refresh.json` | Exact installed app id + schema fingerprint, claimed before Refresh, verified after. |
+| Built-in browser tabs | `embedded-browser.ts` process memory: one window per tab, tab id = webContents id | The shim answers every tabs/windows/debugger call from it; Electron's partial native tabs API is not consulted. Lost with the process, like Chrome's tabs. |
+| ChatGPT accounts | `chat-accounts.ts` / `config.chatAccounts`; sign-in in each `persist:cos-chatgpt-<id>` partition | The browser follows the committed active account; a linked setup profile switches in the same config commit. |
 | Control API endpoint | `control-api.ts` / `control-api/{token,endpoint.json}` | Per launch, only while the listener runs. Token written before the endpoint; endpoint removed first on stop. A crash can leave both behind, so a caller must still reach the port. |
 
 ## 5. Startup, configuration and shutdown
@@ -2058,6 +2061,56 @@ operations reuse a suitable existing window unchanged. If a new background windo
 authorized, its shared layout policy bounds it to 45% of the work area and 800×600, then
 minimizes it. User-selected foreground actions retain their own intent. Window geometry,
 process absence, tab election and provider hydration are different decisions.
+
+### Built-in browser and ChatGPT accounts
+
+`ui.chatBrowser: 'embedded'` runs ChatGPT in this app's own windows instead of Chrome, Edge or
+Brave. Nothing about the companion changes: Electron loads a staged copy of `extension/` into a
+persistent session and it pairs with and polls the bridge exactly as in Chrome. `browser.ts`
+routes the two launcher calls (`isPreferredBrowserRunning`, `openInPreferredBrowser`) to
+`embedded-browser.ts`, so wake, discovery, recovery and resume open their URLs there unchanged.
+
+Electron implements storage, scripting (including MAIN-world content scripts), alarms, runtime
+and `tabs.sendMessage`. It has no windows, debugger or permissions API and only part of tabs, and
+never fires `runtime.onStartup`. The staged worker therefore starts from `embedded-entry.js`,
+which imports the per-launch host address, `extension/embedded-host.js`, then `background.js`.
+The shim replaces tabs (except `sendMessage`), windows, debugger and permissions with calls to
+the host, and delivers `runtime.onStartup` to the first worker start of each load (a worker
+restarted by idle shutdown does not get it, as in Chrome). The host owns every tab: one window
+per tab, tab id = webContents id (the id Electron's native APIs use), `active` = window shown and
+not minimized, a hidden window reads as minimized. Tab/debugger events reach the worker over one
+socket that the host pings every 20 s, which also keeps the worker alive.
+
+Constraints that cost a debugging session each: Electron keeps an extension worker's scripts
+across launches, so the session's service-worker registrations are cleared before every load;
+otherwise the worker ran the previous launch's host address. Renaming the worker file instead
+starts it without extension bindings (`chrome` undefined). The worker calls the host during
+`loadExtension`, before the extension id is known, so those first calls wait for the load
+instead of being refused as an unknown origin.
+
+Security: the host listener binds 127.0.0.1 and requires both the per-launch token (only the
+staged extension files hold it; they are not web-accessible) and the loaded extension's Origin.
+Pages run sandboxed with context isolation and no Node in a session separate from the app
+window's; `index.ts`'s global deny-all navigation policy skips only contents of these sessions,
+which get `embedded-browser.ts::applyPagePolicy` instead: web schemes only, sign-in pop-ups
+(OpenAI, Google, Apple, Microsoft) stay inside, ChatGPT links become tabs, everything else goes to
+the OS browser. Permissions are limited to clipboard write and fullscreen. The session presents
+Electron's user agent without its `Electron/` and app tokens.
+
+Accounts: each `config.chatAccounts` entry is its own `persist:cos-chatgpt-<id>` partition, so a
+switch closes the previous account's windows and loads the companion into the next session; it
+never signs anyone out. The new session's companion pairs again automatically. An account may
+name the setup profile its ChatGPT plugins use (a plugin is visible only in the account that
+created it); selecting the account switches that profile in the same commit and reconnects.
+Removing an account clears its site data. ChatGPT links opened from Setup follow the built-in
+browser when it is selected, because that is where the user is signed in.
+
+A session's chat A belongs to the account it was created in. After a switch it cannot be opened,
+so ordinary Compact & Resume cannot get its brief. `bridge.ts::resumeSessionFromLocalHistory`
+files the same ticket, writes the brief from the recording (`session/local-brief.ts`: the
+transcript, bounded by `prepareHandoff`) and hands it to `captureCompactionBrief` with no page
+collecting placement, so chat B opens through the app's browser opener in the current account.
+Chats in a native ChatGPT Project are refused: chat B would enter the Project through chat A.
 
 ### Overwrite and recovery presentation
 
@@ -3913,6 +3966,12 @@ shared-tree change may already have addressed them.
   Recording Off lacks a uniform runtime gate for retained per-chat overrides. Attempt
   invalidation now preserves debt, but these remaining controls still need one durable
   semantic transaction and effective current-setting enforcement.
+
+- **Built-in browser:** a tab is a whole window; there is no tab strip, and `tabs.move` is a
+  no-op. Google and other providers may refuse sign-in in an embedded browser despite the plain
+  user agent; email sign-in is the fallback. The extension popup has no toolbar button. Live
+  ChatGPT behavior of the built-in browser is unverified in CI; its end-to-end check runs the
+  real companion against a stand-in chatgpt.com page.
 
 Do not restore obsolete claims while investigating: two MCP surfaces, one global prime run,
 three browser command kinds, fixed 60s Unattributed repair, tab-query

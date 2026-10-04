@@ -77,6 +77,7 @@ import { startAgentRuntimeGc, stopAgentRuntimeGc } from './runtime-gc.js';
 import { applyStagedUpdate, startUpdateChecks } from './update.js';
 import { UI_BASE_ZOOM, windowLayoutForDisplays, windowPlacementWasMaximized, titleBarOverlayForTheme, windowBackgroundForTheme } from './window-layout.js';
 import { openInPreferredBrowser } from './browser.js';
+import { isEmbeddedBrowserContents, shutdownEmbeddedBrowser, startEmbeddedBrowser } from './embedded-browser.js';
 import {
   applyLoginStartup,
   isBackgroundLaunch,
@@ -227,7 +228,12 @@ function createWindow(): void {
   // corpse. Dropping it is what makes those paths take their existing null branch.
   window.on('closed', () => {
     window = null;
-    if (!quitting && process.platform !== 'darwin' && !getConfig().ui.minimizeToTray) void shutdownPetOverlay();
+    // Hidden ChatGPT windows of the built-in browser are windows too; like the pet overlay,
+    // they must not keep a closed app alive when closing it means quitting.
+    if (!quitting && process.platform !== 'darwin' && !getConfig().ui.minimizeToTray) {
+      void shutdownPetOverlay();
+      void shutdownEmbeddedBrowser();
+    }
   });
 
   if (process.env.ELECTRON_RENDERER_URL) {
@@ -525,6 +531,11 @@ void app.whenReady().then(async () => {
   if (browserExtensionRequired(getConfig())) {
     void startBridge();
   }
+  // The built-in browser hosts the companion, so it starts with the app the way Chrome's
+  // extension starts with Chrome; its windows open only when work or the user asks.
+  if (getConfig().ui.chatBrowser === 'embedded') {
+    startEmbeddedBrowser().catch((error: Error) => logWarn(`built-in ChatGPT browser did not start: ${error.message}`));
+  }
   // Opt-in, and only once every fact it projects has been restored. ipc.ts starts and stops it
   // when the setting changes; a failed bind is logged and leaves the rest of the app untouched.
   if (getConfig().controlApi.enabled) {
@@ -585,7 +596,7 @@ app.on('will-quit', (event) => {
       {
         name: 'admission/drain',
         budgetMs: 40_000,
-        run: () => [shutdownConnection(), shutdownBridge(), shutdownControlApi(), stopAgentRuntimeGc()]
+        run: () => [shutdownConnection(), shutdownBridge(), shutdownControlApi(), stopAgentRuntimeGc(), shutdownEmbeddedBrowser()]
       },
       // Phase 2: only after request handlers are done may their owned child processes go.
       {
@@ -624,6 +635,10 @@ app.on('will-quit', (event) => {
 // Belt and braces: no web contents anywhere in this app may open a window or
 // navigate. External links go through the vetted allowlist in ipc.ts instead.
 app.on('web-contents-created', (_event, contents) => {
+  // The built-in ChatGPT browser is a browser: its pages navigate and sign in, under the
+  // narrower policy `embedded-browser.ts` applies to each of them. Its session is separate
+  // from the app window's, so this exemption cannot reach the app's own contents.
+  if (isEmbeddedBrowserContents(contents)) return;
   contents.setWindowOpenHandler(() => ({ action: 'deny' }));
   contents.on('will-navigate', (event) => event.preventDefault());
   contents.on('will-redirect', (event) => event.preventDefault());

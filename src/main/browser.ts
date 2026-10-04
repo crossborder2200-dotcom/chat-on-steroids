@@ -16,6 +16,8 @@ export async function isPreferredBrowserRunning(
   browser: ChatBrowser = getConfig().ui.chatBrowser ?? 'chrome',
   command: typeof runCommand = runCommand
 ): Promise<boolean | null> {
+  // The built-in browser is this process; it runs exactly when its host has a session.
+  if (browser === 'embedded') return (await import('./embedded-browser.js')).embeddedBrowserRunning();
   try {
     if (platform !== 'win32') {
       if (platform !== 'darwin' && platform !== 'linux') return null;
@@ -65,7 +67,7 @@ function isExecutableBrowser(candidate: string, platform: NodeJS.Platform): bool
 }
 
 /** The browser's own extensions page, in the spelling that family's address bar shows. */
-export function extensionsPageUrl(browser: ChatBrowser): string {
+export function extensionsPageUrl(browser: Exclude<ChatBrowser, 'embedded'>): string {
   return browser === 'edge' ? 'edge://extensions' : browser === 'brave' ? 'brave://extensions' : 'chrome://extensions';
 }
 
@@ -221,6 +223,11 @@ export async function openInPreferredBrowser(
   const usable = options.usable ?? ((candidate: string) => isExecutableBrowser(candidate, platform));
   const launch = options.launch ?? launchCommand;
   const selected = options.browser ?? getConfig().ui.chatBrowser ?? 'chrome';
+  if (selected === 'embedded') {
+    const { openInEmbeddedBrowser } = await import('./embedded-browser.js');
+    await openInEmbeddedBrowser(url, { background: options.backgroundStartup === true });
+    return 'embedded';
+  }
   const label = selected === 'edge' ? 'Microsoft Edge' : selected === 'brave' ? 'Brave Browser' : 'Google Chrome / Chromium';
   const bounds = browserWindowBounds();
   // These switches only affect a newly started Chrome process; handing a URL to an

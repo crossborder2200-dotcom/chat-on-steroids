@@ -291,6 +291,7 @@ const api = {
   setSessionAutomation: (id: string, automation: SessionControlsView['automation'], afterTurn?: boolean) => call<SessionControlsView>('sessions:automation', { id, automation, afterTurn }),
   setSessionObjective: (id: string, text: string, mode: 'goal' | 'loop') => call<SessionControlsView>('sessions:objective', { id, text, mode }),
   compactSession: (id: string) => call<SessionControlsView>('sessions:compact', { id }),
+  resumeSessionLocally: (id: string) => call<SessionControlsView>('sessions:resumeLocally', { id }),
   cancelSessionCompaction: (id: string) => call<SessionControlsView>('sessions:cancelCompaction', { id }),
   draftTaskPlan: (text: string, backend: 'api' | 'chatgpt', requestId?: string) => call<string[]>('sessions:plan', { text, backend, requestId }),
   sendInput: (input: InputArgs) => call<InputEntry>('sessions:send', input),
@@ -332,6 +333,13 @@ const api = {
   extensionPath: () => call<string | null>('bridge:extensionPath'),
   openExtensionFolder: () => call<string>('bridge:openExtensionFolder'),
   openExtensionsPage: () => call<boolean>('bridge:openExtensionsPage'),
+  showEmbeddedBrowser: () => call<boolean>('browser:showEmbedded'),
+  changeChatAccount: (request:
+    | { action: 'add'; name: string }
+    | { action: 'select' | 'remove'; id: string }
+    | { action: 'rename'; id: string; name: string }
+    | { action: 'link'; id: string; setupProfileId: string | null }) => call<AppState>('accounts:change', request),
+  signOutChatAccount: () => call<AppState>('accounts:signOut'),
 
   getSwarm: () => call<SwarmState>('swarm:get'),
   resetSwarm: () => call<SwarmState>('swarm:reset'),

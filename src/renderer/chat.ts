@@ -1392,13 +1392,13 @@ async function refreshSessionControls(): Promise<void> {
     // Retire the previous selection's projection before awaiting the new owner's IPC.
     // Replace the translation binding too, so a locale refresh cannot revive its status.
     ui($('sessionControlStatus'), 'textContent', () => '');
-    for (const action of ['compactSession', 'cancelCompaction']) $(action).hidden = true;
+    for (const action of ['compactSession', 'resumeLocally', 'cancelCompaction']) $(action).hidden = true;
   }
   paintAutomationSwitch();
   if (!id) { controlledSessionId = null; controlledTurnId = null; paintDeliveryControls(); menu.hidden = false;
     $<HTMLTextAreaElement>('sessionObjective').disabled = false;
     paintTaskActions();
-    for (const action of ['compactSession', 'cancelCompaction']) $(action).hidden = true;
+    for (const action of ['compactSession', 'resumeLocally', 'cancelCompaction']) $(action).hidden = true;
     return; }
   const opening = pendingComposerInputs.find(row => row.opening && row.sessionId === id && ['queued', 'browser'].includes(row.state));
   if (!sessions.find(row => row.id === id)?.conversationId) {
@@ -1413,7 +1413,7 @@ async function refreshSessionControls(): Promise<void> {
     const objective = $<HTMLTextAreaElement>('sessionObjective');
     objective.value = opening?.objective ?? ''; objective.disabled = true;
     objective.dataset.sessionId = id;
-    for (const action of ['compactSession', 'cancelCompaction']) $(action).hidden = true;
+    for (const action of ['compactSession', 'resumeLocally', 'cancelCompaction']) $(action).hidden = true;
     paintAutomationSwitch(); paintDeliveryControls();
     return;
   }
@@ -1436,6 +1436,7 @@ async function refreshSessionControls(): Promise<void> {
   paintStateLine();
   menu.hidden = !controls;
   $('compactSession').hidden = !controls;
+  $('resumeLocally').hidden = !controls;
   if (!controls) { $('cancelCompaction').hidden = true; return; }
   const objective = $<HTMLTextAreaElement>('sessionObjective');
   if (objective.dataset.sessionId !== id || !objective.dataset.edited) {
@@ -1454,6 +1455,7 @@ async function refreshSessionControls(): Promise<void> {
   paintLoopDeliveryTitle();
   paintAutomationSwitch();
   $<HTMLButtonElement>('compactSession').disabled = !!controls.blocked || !!controls.job?.busy;
+  $<HTMLButtonElement>('resumeLocally').disabled = !!controls.blocked || !!controls.job?.busy;
   $('cancelCompaction').hidden = !controls.job?.busy;
   ui($('sessionControlStatus'), 'textContent', () => controls.blocked === 'worker' ? t("This sub-agent is managed by its prime.") : controls.blocked === 'blocked' ? t("This chat is blocked.") : controls.job?.busy ? t("Compaction is running in ChatGPT.") : '');
 }
@@ -5562,6 +5564,14 @@ export function initChat(next: Deps): void {
       finally { button.disabled = false; if (selectedId === id) void refreshSessionControls(); }
     });
   }
+  // After a ChatGPT account switch the old chat cannot be opened, so it cannot write the brief.
+  $('resumeLocally').addEventListener('click', async () => {
+    const id = selectedId; if (!id) return;
+    if (!window.confirm(t("Continue this session in a new chat? The app writes the handoff from the conversation it recorded, without asking the old chat. Use this when the old chat belongs to another ChatGPT account."))) return;
+    const button = $<HTMLButtonElement>('resumeLocally'); button.disabled = true;
+    try { await run(api.resumeSessionLocally(id)); }
+    finally { button.disabled = false; if (selectedId === id) void refreshSessionControls(); }
+  });
   const appendImages = (owner: ComposerDraftOwner, chosen: InputAttachment[] | null | undefined): boolean => {
     if (!chosen?.length) return false;
     if (!ownsComposerDraft(owner)) { toast(t("Files were not added because the draft changed.")); return false; }

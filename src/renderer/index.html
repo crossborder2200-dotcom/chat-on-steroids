@@ -745,6 +745,15 @@
                 </div>
                 <div class="step-body">
                   <h3>Add the browser extension</h3>
+                  <div id="embeddedBrowserSetup" hidden>
+                    <p>The built-in browser loads the extension by itself. Sign in to ChatGPT in its window once; the sign-in is kept.</p>
+                    <div class="step-actions">
+                      <button class="btn btn-solid" id="embeddedBrowserOpen" type="button">
+                        <i class="ico ph ph-arrow-square-out" aria-hidden="true"></i>Open ChatGPT
+                      </button>
+                    </div>
+                  </div>
+                  <div id="extensionInstallSetup">
                   <ol class="setup-instructions">
                     <li>Click Open extensions page below. It opens the extensions page in your ChatGPT browser.</li>
                     <li>Turn on Developer mode at the top right.</li>
@@ -775,6 +784,7 @@
                     <span class="chosen" id="bridgeState"></span>
                   </div>
                   <p class="hint" id="extensionPath"></p>
+                  </div>
                 </div>
               </li>
             </ol>
@@ -968,7 +978,18 @@
                   </div>
                 <header class="settings-section-head automation-section-head"><div><h2 class="settings-section-title">Browser & history</h2><p>Manage background tabs, browser preferences, and history compaction.</p></div></header>
                 <div class="settings-surface pane">
-                  <label class="setting"><span class="setting-text"><b>ChatGPT browser</b><em>Used when the app launches a browser. Install the companion and sign in to ChatGPT in this browser's active profile. Already connected tabs stay in their browser.</em></span><select id="chatBrowser"><option value="chrome">Google Chrome / Chromium</option><option value="edge">Microsoft Edge</option><option value="brave">Brave Browser</option></select></label>
+                  <label class="setting"><span class="setting-text"><b>ChatGPT browser</b><em>Used when the app launches a browser. Install the companion and sign in to ChatGPT in this browser's active profile. Already connected tabs stay in their browser.</em></span><select id="chatBrowser"><option value="embedded">Built-in — no other browser needed</option><option value="chrome">Google Chrome / Chromium</option><option value="edge">Microsoft Edge</option><option value="brave">Brave Browser</option></select></label>
+                  <!-- Built-in browser only. Each account is its own persistent browser session, so
+                       a switch never signs anyone out; it closes the other account's ChatGPT windows. -->
+                  <div class="setting chat-accounts" id="chatAccountsSetting" hidden>
+                    <span class="setting-text"><b>ChatGPT account</b><em>The built-in browser keeps each account signed in separately. Switching closes the ChatGPT windows of the previous account and stops replies running there.</em></span>
+                    <div class="row-inline"><select id="chatAccount" translate="no" aria-label="ChatGPT account"></select><button class="btn" id="chatAccountOpen" type="button">Open ChatGPT</button></div>
+                  </div>
+                  <div class="setting chat-accounts" id="chatAccountManage" hidden>
+                    <span class="setting-text"><b>Manage accounts</b><em>Add a name, then sign in to ChatGPT in the window that opens. Sign out clears the stored sign-in of the selected account.</em></span>
+                    <div class="row-inline"><input id="chatAccountName" type="text" maxlength="80" autocomplete="off" placeholder="Account name" aria-label="Account name" /><button class="btn" id="chatAccountAdd" type="button">Add account</button><button class="btn" id="chatAccountRename" type="button">Rename</button><button class="btn" id="chatAccountSignOut" type="button">Sign out</button><button class="btn" id="chatAccountRemove" type="button">Remove</button></div>
+                  </div>
+                  <label class="setting chat-accounts" id="chatAccountSetupSetting" hidden><span class="setting-text"><b>Setup profile for this account</b><em>A plugin created in one account's ChatGPT is not visible in another. Pick the setup profile whose tunnel this account's plugins use, and it switches together with the account.</em></span><select id="chatAccountSetup" translate="no" aria-label="Setup profile for this account"></select></label>
                   <label class="setting"><span class="setting-text"><b>Browser bridge port</b><em id="browserBridgePortHint">Auto uses the first available port. A fixed port must be available.</em></span><select id="browserBridgePort"><option value="auto">Auto</option><option value="8765">8765</option><option value="8766">8766</option><option value="8767">8767</option><option value="8768">8768</option><option value="8769">8769</option></select></label>
                   <label class="setting"><span class="setting-text"><b>Background chats</b><em>Keep app-created ChatGPT tabs in the background.</em></span><input id="backgroundChats" type="checkbox" /></label>
                   <label class="setting"><span class="setting-text"><b>Automatic plugin refresh</b><em>Let the companion refresh changed connector tools in ChatGPT. Off by default; manual refresh remains available in ChatGPT.</em></span><input id="autoRefreshPlugins" type="checkbox" /></label>
@@ -1196,6 +1217,7 @@
                     <div class="context-progress" role="progressbar" aria-label="Estimated session context" aria-valuemin="0" aria-valuemax="100"><span></span></div>
                     <button type="button" class="context-action" id="contextDisplay"><i class="ico ph ph-arrows-clockwise" aria-hidden="true"></i><span>Show token values</span></button>
                     <button id="compactSession" class="context-action" type="button" hidden><i class="ico ph ph-copy" aria-hidden="true"></i><span>Compact &amp; resume</span></button>
+                    <button id="resumeLocally" class="context-action" type="button" hidden><i class="ico ph ph-arrow-right" aria-hidden="true"></i><span>Continue in a new chat from this app's history</span></button>
                     <button id="cancelCompaction" class="context-action" type="button" hidden><i class="ico ph ph-x" aria-hidden="true"></i><span>Cancel compaction</span></button>
                     <p id="sessionControlStatus" role="status"></p>
                   </div>

@@ -132,6 +132,7 @@ import { setLivePreview } from './live-preview.js';
 import { nativeHandoffPrompt } from './session/handoff-prompt.js';
 import { DEFAULT_HANDOFF_PROMPT } from '../shared/handoff.js';
 import { briefShortfall, resumeBootstrapText } from './session/handoff.js';
+import { localSessionBrief } from './session/local-brief.js';
 import {
   PRIME_ID,
   agentConversation,
@@ -1910,6 +1911,34 @@ export async function compactSession(sessionId: string): Promise<SessionControls
     // running. A cold process start alone cannot deliver a manual desktop request.
     queueBrowserRecovery(opened.from, sessionId,
       `compaction:${opened.token}:${compactionPhaseOf(opened)}:manual`, 'compaction');
+  }
+  return sessionControlsFor(sessionId);
+}
+/**
+ * Compact & Resume without asking chat A: the app writes the brief from the session's own
+ * recording (`session/local-brief.ts`) and opens chat B in the browser the user is signed in
+ * to now. This is how a session continues after a ChatGPT account switch, when chat A belongs
+ * to the other account and cannot be opened, let alone asked for a summary.
+ *
+ * Everything after the brief is the ordinary transaction: the same ticket, capture, resume
+ * command and commit. No page collects chat B's placement, so delivery opens it through the
+ * app's browser opener. A chat inside a native ChatGPT Project is refused: chat B would have to
+ * enter that Project through chat A, which the other account cannot open.
+ */
+export async function resumeSessionFromLocalHistory(sessionId: string): Promise<SessionControlsView> {
+  const id = await controlledConversation(sessionId);
+  const brief = await localSessionBrief(sessionId);
+  const { opened, started } = await fileCompactionTicket(sessionId, id);
+  if (opened.state !== 'awaiting-summary') return sessionControlsFor(sessionId);
+  if (opened.project) {
+    if (started) await cancelResumeNow(sessionId);
+    changed();
+    throw new Error('This chat is inside a ChatGPT Project, which only its own account can open. Continue it from that account.');
+  }
+  const result = await captureCompactionBrief('', opened, brief, null);
+  if (result.status !== 200) {
+    const message = result.body.message;
+    throw new Error(typeof message === 'string' ? message : `The brief was not stored (${String(result.body.error)}).`);
   }
   return sessionControlsFor(sessionId);
 }
