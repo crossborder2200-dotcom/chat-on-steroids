@@ -685,7 +685,6 @@
   "Run cleared — every worker ended": "Đã xóa lần chạy — mọi worker đã kết thúc",
   "{0} cleared — its slot is free": "Đã xóa {0} — slot của nó đã trống",
   "Browser disconnected": "Đã ngắt kết nối trình duyệt",
-  "Extension folder opened": "Đã mở thư mục tiện ích mở rộng",
   "{0} tokens used": "Đã dùng {0} token",
   "Auto-compaction off for Pro": "Tự động compact tắt cho Pro",
   "Auto-compaction at {0} tokens": "Tự động compact tại {0} token",
@@ -1175,7 +1174,6 @@
   "Browser navigation, input and page JavaScript; native mouse and keyboard where supported.": "Điều hướng trình duyệt, thao tác nhập và JavaScript của trang; chuột và bàn phím gốc trên nền tảng hỗ trợ.",
   "Browser tabs, DOM, console, network and background screenshots; native apps, input and clipboard where supported.": "Tab trình duyệt, DOM, console, mạng và ảnh chụp màn hình nền; ứng dụng gốc, thao tác nhập và bảng tạm trên nền tảng hỗ trợ.",
   "Turn on Developer mode at the top right.": "Bật Developer mode ở góc trên bên phải.",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "Nhấp Mở thư mục tiện ích mở rộng bên dưới và sao chép đường dẫn thư mục từ thanh địa chỉ của trình quản lý tệp.",
   "The extension pairs with this app automatically — there is no code to type.": "Tiện ích mở rộng tự động ghép nối với ứng dụng này — không cần nhập mã.",
   "When the model ends the turn this way with Goal or Loop on in this chat, the next step is written from that prompt and response source. Otherwise you get a notification.": "Khi mô hình kết thúc lượt theo cách này trong lúc Goal hoặc Loop đang bật cho chat này, bước tiếp theo sẽ được tạo từ prompt đó và nguồn phản hồi đã chọn. Nếu không, bạn sẽ nhận thông báo.",
   "Not saved to history": "Chưa lưu vào lịch sử",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} tiến trình nền đang chạy",
   "Diagnostics report": "Báo cáo chẩn đoán",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "Lưu một tệp gồm phiên bản, cài đặt, trạng thái kết nối và nhật ký, đã loại bỏ thông tin cá nhân, để đính kèm vào báo cáo lỗi.",
-  "Diagnostics report saved as {0}. Read it before you share it.": "Đã lưu báo cáo chẩn đoán thành {0}. Hãy đọc trước khi chia sẻ."
+  "Diagnostics report saved as {0}. Read it before you share it.": "Đã lưu báo cáo chẩn đoán thành {0}. Hãy đọc trước khi chia sẻ.",
+  "How should ChatGPT reach this computer?": "ChatGPT nên kết nối tới máy tính này bằng cách nào?",
+  "Quick start — no account needed": "Bắt đầu nhanh — không cần tài khoản",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "Bỏ qua các bước tạo tunnel và API key. Dùng một địa chỉ Cloudflare tạm thời, thay đổi mỗi khi ứng dụng khởi động lại; sau khi khởi động lại, hãy dán URL mới vào plugin trong ChatGPT.",
+  "OpenAI tunnel — stable connection": "Tunnel của OpenAI — kết nối ổn định",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "Chỉ cần tạo tunnel và API key một lần. Plugin vẫn hoạt động sau khi khởi động lại và không có gì bị công khai ra internet.",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "Nhấp Mở trang tiện ích mở rộng bên dưới. Trang tiện ích mở rộng sẽ mở trong trình duyệt ChatGPT của bạn.",
+  "Click Open extension folder below. The folder path is copied for you.": "Nhấp Mở thư mục tiện ích mở rộng bên dưới. Đường dẫn thư mục sẽ được sao chép sẵn.",
+  "Open extensions page": "Mở trang tiện ích mở rộng",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "Đã mở thư mục tiện ích mở rộng. Đường dẫn đã được sao chép — hãy dán vào Load unpacked.",
+  "Extensions page opened in your ChatGPT browser": "Đã mở trang tiện ích mở rộng trong trình duyệt ChatGPT của bạn"
 }

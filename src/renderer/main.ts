@@ -1242,6 +1242,11 @@ function apply(next: AppState): void {
     previousState?.config.tunnel.kind
   );
   ui($('methodHint'), 'textContent', () => t(METHOD_HINT[config.tunnel.kind] ?? ''));
+  // The visible chooser mirrors the saved method. Manual has no card here; it stays an
+  // Advanced choice, and then neither card is selected.
+  for (const input of document.querySelectorAll<HTMLInputElement>('input[name="setupMethod"]')) {
+    input.checked = input.value === config.tunnel.kind;
+  }
   applyValue($<HTMLInputElement>('tunnelId'), config.tunnel.tunnelId, previousState?.config.tunnel.tunnelId);
   applyValue(
     $<HTMLInputElement>('desktopTunnelId'),
@@ -1409,6 +1414,7 @@ function apply(next: AppState): void {
   const allDone = current === null;
   const tidy = showAllSteps === null ? allDone : !showAllSteps;
   $('wizard').classList.toggle('is-tidy', tidy);
+  $('setupMethod').hidden = tidy;
   const expand = $<HTMLButtonElement>('wizExpand');
   expand.hidden = false;
   expand.setAttribute('aria-expanded', String(!tidy));
@@ -2071,6 +2077,16 @@ for (const id of [
   'desktopTunnelId'
 ]) {
   $(id).addEventListener('change', () => void save());
+}
+
+// The chooser is a second view of the Advanced select, so it saves through it: one field
+// in the settings patch, one save path, and the select never disagrees with the cards.
+for (const input of document.querySelectorAll<HTMLInputElement>('input[name="setupMethod"]')) {
+  input.addEventListener('change', () => {
+    if (!input.checked) return;
+    $<HTMLSelectElement>('tunnelKind').value = input.value;
+    void save();
+  });
 }
 
 document.addEventListener('click', (event) => {

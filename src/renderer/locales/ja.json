@@ -205,7 +205,6 @@
   ". Repeat for the Desktop plugin if you added it.": "。Desktop プラグインも追加した場合は、同じ操作を行ってください。",
   "This lets ChatGPT use the plugin without asking for each action. Otherwise, approval prompts can pause Goal, Loop and agent tasks. Your folder and tool permissions in this app still apply.": "これにより、ChatGPT は操作ごとに確認せずプラグインを使用できます。それ以外の場合、承認待ちによってゴール、ループ、エージェントのタスクが一時停止することがあります。このアプリで設定したフォルダーとツールの権限は引き続き適用されます。",
   "Turn on Developer mode at the top right.": "右上の「デベロッパー モード」を有効にしてください。",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "下の「拡張機能フォルダーを開く」をクリックし、ファイルマネージャーのアドレスバーからフォルダーのパスをコピーしてください。",
   "Load unpacked": "Load unpacked（パッケージ化されていない拡張機能を読み込む）",
   "The extension pairs with this app automatically — there is no code to type.": "拡張機能はこのアプリと自動でペアリングされます。コードの入力は不要です。",
   "Required for sub-agents:": "サブエージェントの利用に必要です：",
@@ -752,7 +751,6 @@
   "Run cleared — every worker ended": "実行をクリアしました · すべてのワーカーを終了しました",
   "{0} cleared — its slot is free": "{0}をクリアしました · 枠が空きました",
   "Browser disconnected": "ブラウザーの接続を解除しました",
-  "Extension folder opened": "拡張機能フォルダーを開きました",
   "{0} tokens used": "{0}トークン使用済み",
   "Auto-compaction off for Pro": "Pro では自動圧縮が無効です",
   "Auto-compaction at {0} tokens": "{0}トークンで自動圧縮",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} 個のバックグラウンドプロセスを実行中",
   "Diagnostics report": "診断レポート",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "バージョン、設定、接続状態、ログを個人情報を除いて1つのファイルに保存します。不具合報告に添付できます。",
-  "Diagnostics report saved as {0}. Read it before you share it.": "診断レポートを {0} として保存しました。共有する前に内容を確認してください。"
+  "Diagnostics report saved as {0}. Read it before you share it.": "診断レポートを {0} として保存しました。共有する前に内容を確認してください。",
+  "How should ChatGPT reach this computer?": "ChatGPT からこのコンピューターへの接続方法を選んでください",
+  "Quick start — no account needed": "クイックスタート — アカウント不要",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "トンネルと API キーの手順を省略します。アプリを再起動するたびに変わる一時的な Cloudflare アドレスを使います。再起動後は新しい URL を ChatGPT のプラグインに貼り付けてください。",
+  "OpenAI tunnel — stable connection": "OpenAI トンネル — 安定した接続",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "トンネルと API キーを一度だけ作成します。再起動してもプラグインはそのまま使え、インターネットに公開されるものはありません。",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "下の「拡張機能ページを開く」をクリックしてください。ChatGPT 用のブラウザーで拡張機能ページが開きます。",
+  "Click Open extension folder below. The folder path is copied for you.": "下の「拡張機能フォルダーを開く」をクリックしてください。フォルダーのパスは自動でコピーされます。",
+  "Open extensions page": "拡張機能ページを開く",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "拡張機能フォルダーを開きました。パスはコピー済みです。「パッケージ化されていない拡張機能を読み込む」に貼り付けてください。",
+  "Extensions page opened in your ChatGPT browser": "ChatGPT 用のブラウザーで拡張機能ページを開きました"
 }

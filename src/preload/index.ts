@@ -331,6 +331,7 @@ const api = {
   // against a folder the renderer never chose.
   extensionPath: () => call<string | null>('bridge:extensionPath'),
   openExtensionFolder: () => call<string>('bridge:openExtensionFolder'),
+  openExtensionsPage: () => call<boolean>('bridge:openExtensionsPage'),
 
   getSwarm: () => call<SwarmState>('swarm:get'),
   resetSwarm: () => call<SwarmState>('swarm:reset'),

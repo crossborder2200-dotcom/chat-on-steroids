@@ -692,7 +692,6 @@
   "Run cleared — every worker ended": "Execução limpa — todos os workers terminaram",
   "{0} cleared — its slot is free": "{0} limpo — o respetivo lugar está livre",
   "Browser disconnected": "Navegador desligado",
-  "Extension folder opened": "Pasta da extensão aberta",
   "{0} tokens used": "{0} tokens utilizados",
   "Auto-compaction off for Pro": "Compactação automática desativada para Pro",
   "Auto-compaction at {0} tokens": "Compactação automática aos {0} tokens",
@@ -1178,7 +1177,6 @@
   "Browser navigation, input and page JavaScript; native mouse and keyboard where supported.": "Navegação no navegador, entrada e JavaScript da página; rato e teclado nativos quando suportados.",
   "Browser tabs, DOM, console, network and background screenshots; native apps, input and clipboard where supported.": "Separadores do navegador, DOM, consola, rede e capturas de ecrã em segundo plano; aplicações nativas, entrada e área de transferência quando suportado.",
   "Turn on Developer mode at the top right.": "Ative Developer mode no canto superior direito.",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "Clique em Abrir pasta da extensão abaixo e copie o caminho da pasta da barra de endereços do gestor de ficheiros.",
   "The extension pairs with this app automatically — there is no code to type.": "A extensão emparelha automaticamente com esta aplicação — não há qualquer código para introduzir.",
   "When the model ends the turn this way with Goal or Loop on in this chat, the next step is written from that prompt and response source. Otherwise you get a notification.": "Quando o modelo termina o turno desta forma com Goal ou Loop ativado neste chat, o passo seguinte é escrito com esse prompt e essa origem de resposta. Caso contrário, recebe uma notificação.",
   "Not saved to history": "Não guardado no histórico",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} processos em segundo plano em execução",
   "Diagnostics report": "Relatório de diagnóstico",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "Guarda um ficheiro com as versões, as definições, o estado da ligação e o registo, sem dados pessoais, para anexar a um relatório de erro.",
-  "Diagnostics report saved as {0}. Read it before you share it.": "Relatório de diagnóstico guardado como {0}. Leia-o antes de o partilhar."
+  "Diagnostics report saved as {0}. Read it before you share it.": "Relatório de diagnóstico guardado como {0}. Leia-o antes de o partilhar.",
+  "How should ChatGPT reach this computer?": "Como deve o ChatGPT chegar a este computador?",
+  "Quick start — no account needed": "Início rápido — sem conta",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "Salta os passos do túnel e da chave de API. Usa um endereço temporário da Cloudflare que muda sempre que a app reinicia; depois de reiniciar, cole o novo URL no plugin no ChatGPT.",
+  "OpenAI tunnel — stable connection": "Túnel da OpenAI — ligação estável",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "Crie um túnel e uma chave de API uma única vez. O plugin continua a funcionar após reinícios, e nada fica exposto na internet.",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "Clique em Abrir página de extensões abaixo. Abre a página de extensões no seu navegador do ChatGPT.",
+  "Click Open extension folder below. The folder path is copied for you.": "Clique em Abrir pasta da extensão abaixo. O caminho da pasta é copiado por si.",
+  "Open extensions page": "Abrir página de extensões",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "Pasta da extensão aberta. O caminho foi copiado — cole-o em Load unpacked.",
+  "Extensions page opened in your ChatGPT browser": "Página de extensões aberta no seu navegador do ChatGPT"
 }

@@ -685,7 +685,6 @@
   "Run cleared — every worker ended": "Lauf geleert – alle Worker beendet",
   "{0} cleared — its slot is free": "{0} geleert – der Platz ist frei",
   "Browser disconnected": "Browser getrennt",
-  "Extension folder opened": "Erweiterungsordner geöffnet",
   "{0} tokens used": "{0} Tokens verbraucht",
   "Auto-compaction off for Pro": "Automatisches Komprimieren für Pro aus",
   "Auto-compaction at {0} tokens": "Automatisches Komprimieren bei {0} Tokens",
@@ -1175,7 +1174,6 @@
   "Browser navigation, input and page JavaScript; native mouse and keyboard where supported.": "Browser-Navigation, Eingaben und JavaScript auf der Seite; native Maus und Tastatur, wo unterstützt.",
   "Browser tabs, DOM, console, network and background screenshots; native apps, input and clipboard where supported.": "Browser-Tabs, DOM, Konsole, Netzwerk und Screenshots im Hintergrund; native Apps, Eingaben und Zwischenablage, wo unterstützt.",
   "Turn on Developer mode at the top right.": "Schalte oben rechts den Entwicklermodus ein.",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "Klicke unten auf „Erweiterungsordner öffnen“ und kopiere den Ordnerpfad aus der Adressleiste des Dateimanagers.",
   "The extension pairs with this app automatically — there is no code to type.": "Die Erweiterung verbindet sich automatisch mit dieser App – es muss kein Code eingegeben werden.",
   "When the model ends the turn this way with Goal or Loop on in this chat, the next step is written from that prompt and response source. Otherwise you get a notification.": "Beendet das Modell den Durchlauf so, während Goal oder Loop in diesem Chat an ist, wird der nächste Schritt mit diesem Prompt und dieser Antwortquelle geschrieben. Sonst bekommst du eine Benachrichtigung.",
   "Not saved to history": "Nicht im Verlauf gespeichert",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} Hintergrundprozesse laufen",
   "Diagnostics report": "Diagnosebericht",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "Speichert eine Datei mit Versionen, Einstellungen, Verbindungsstatus und Protokoll – ohne persönliche Angaben –, die du einem Fehlerbericht anhängen kannst.",
-  "Diagnostics report saved as {0}. Read it before you share it.": "Diagnosebericht als {0} gespeichert. Lies ihn, bevor du ihn teilst."
+  "Diagnostics report saved as {0}. Read it before you share it.": "Diagnosebericht als {0} gespeichert. Lies ihn, bevor du ihn teilst.",
+  "How should ChatGPT reach this computer?": "Wie soll ChatGPT diesen Computer erreichen?",
+  "Quick start — no account needed": "Schnellstart – kein Konto nötig",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "Überspringt die Schritte für Tunnel und API-Schlüssel. Nutzt eine temporäre Cloudflare-Adresse, die sich bei jedem Neustart der App ändert; füge nach einem Neustart die neue URL in das Plugin in ChatGPT ein.",
+  "OpenAI tunnel — stable connection": "OpenAI-Tunnel – stabile Verbindung",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "Erstelle einmalig einen Tunnel und einen API-Schlüssel. Das Plugin funktioniert auch nach Neustarts weiter, und nichts ist offen im Internet erreichbar.",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "Klicke unten auf „Erweiterungsseite öffnen“. Sie öffnet die Erweiterungsseite in deinem ChatGPT-Browser.",
+  "Click Open extension folder below. The folder path is copied for you.": "Klicke unten auf „Erweiterungsordner öffnen“. Der Ordnerpfad wird für dich kopiert.",
+  "Open extensions page": "Erweiterungsseite öffnen",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "Erweiterungsordner geöffnet. Der Pfad ist kopiert – füge ihn bei „Entpackte Erweiterung laden“ ein.",
+  "Extensions page opened in your ChatGPT browser": "Erweiterungsseite in deinem ChatGPT-Browser geöffnet"
 }

@@ -698,7 +698,6 @@
   "Run cleared — every worker ended": "Запуск очищен — все воркеры завершены",
   "{0} cleared — its slot is free": "{0} очищен — его слот свободен",
   "Browser disconnected": "Браузер отключён",
-  "Extension folder opened": "Папка расширения открыта",
   "{0} tokens used": "Использовано токенов: {0}",
   "Auto-compaction off for Pro": "Автосжатие для Pro отключено",
   "Auto-compaction at {0} tokens": "Автосжатие при {0} токенах",
@@ -1188,7 +1187,6 @@
   "Browser navigation, input and page JavaScript; native mouse and keyboard where supported.": "Навигация в браузере, ввод и JavaScript страницы; системные мышь и клавиатура, где поддерживается.",
   "Browser tabs, DOM, console, network and background screenshots; native apps, input and clipboard where supported.": "Вкладки браузера, DOM, консоль, сеть и фоновые скриншоты; системные приложения, ввод и буфер обмена, где поддерживается.",
   "Turn on Developer mode at the top right.": "Включите Developer mode справа сверху.",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "Нажмите Open extension folder ниже и скопируйте путь к папке из адресной строки файлового менеджера.",
   "The extension pairs with this app automatically — there is no code to type.": "Расширение подключается к приложению автоматически — код вводить не нужно.",
   "When the model ends the turn this way with Goal or Loop on in this chat, the next step is written from that prompt and response source. Otherwise you get a notification.": "Если модель так завершает ход, когда в этом чате включена Цель или Цикл, следующий шаг пишется по этому промпту и источнику ответа. Иначе вы получите уведомление.",
   "Not saved to history": "Не сохранено в истории",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} фоновых процессов запущено",
   "Diagnostics report": "Диагностический отчёт",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "Сохраняет один файл с версиями, настройками, состоянием подключения и журналом без личных данных, чтобы приложить его к сообщению об ошибке.",
-  "Diagnostics report saved as {0}. Read it before you share it.": "Диагностический отчёт сохранён как {0}. Прочитайте его, прежде чем делиться."
+  "Diagnostics report saved as {0}. Read it before you share it.": "Диагностический отчёт сохранён как {0}. Прочитайте его, прежде чем делиться.",
+  "How should ChatGPT reach this computer?": "Как ChatGPT будет подключаться к этому компьютеру?",
+  "Quick start — no account needed": "Быстрый старт — без аккаунта",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "Пропускает шаги с туннелем и API-ключом. Использует временный адрес Cloudflare, который меняется при каждом перезапуске приложения; после перезапуска вставьте новый URL в плагин в ChatGPT.",
+  "OpenAI tunnel — stable connection": "Туннель OpenAI — стабильное подключение",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "Туннель и API-ключ создаются один раз. Плагин продолжает работать после перезапусков, и ничего не открыто в интернет.",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "Нажмите «Открыть страницу расширений» ниже. Она откроется в браузере, где работает ChatGPT.",
+  "Click Open extension folder below. The folder path is copied for you.": "Нажмите «Открыть папку расширения» ниже. Путь к папке будет скопирован автоматически.",
+  "Open extensions page": "Открыть страницу расширений",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "Папка расширения открыта. Путь скопирован — вставьте его в Load unpacked.",
+  "Extensions page opened in your ChatGPT browser": "Страница расширений открыта в браузере ChatGPT"
 }

@@ -1609,6 +1609,15 @@ details.connector[open] > summary::before { rotate: 90deg; }
 /* Open steps show their number; hidden steps are not counted. */
 .wizard > .step:not([hidden]) { counter-increment: setup-step; }
 .step:not(.is-done) .step-mark .tick { display: none; }
+.setup-method { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+.setup-method[hidden] { display: none; }
+.setup-method > legend { grid-column: 1 / -1; padding: 0; margin-bottom: 8px; font-size: calc(13px * var(--text-scale, 1)); font-weight: 600; }
+.setup-method-option { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 4px; align-items: start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
+.setup-method-option:hover { background: var(--hover); }
+.setup-method-option:has(input:checked) { border-color: var(--accent); background: var(--hover); }
+.setup-method-option > input { grid-row: 1 / span 2; margin: 2px 0 0; }
+.setup-method-title { font-weight: 600; }
+.setup-method-hint { color: var(--soft); font-size: calc(12.5px * var(--text-scale, 1)); line-height: 1.45; }
 .setup-progress { display: flex; align-items: center; gap: 14px; margin: 4px 0 10px; }
 .setup-progress-text { flex: none; color: var(--soft); font-size: calc(12.5px * var(--text-scale, 1)); font-weight: 600; }
 .setup-progress-track { position: relative; flex: 1; height: 4px; overflow: hidden; border-radius: 999px; background: var(--line); }

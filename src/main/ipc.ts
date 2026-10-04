@@ -133,7 +133,7 @@ import {
   MAX_COMMAND_ALLOWLIST_RULE_CHARS,
   validateCommandAllowlistRule
 } from '../shared/command-allowlist.js';
-import { openInPreferredBrowser } from './browser.js';
+import { extensionsPageUrl, openInPreferredBrowser } from './browser.js';
 import { manualDownloadUrl, markInstallOnQuit, onUpdateChange, updateStatus } from './update.js';
 import {
   getMacOSDesktopAccess,
@@ -1456,7 +1456,20 @@ export function registerIpc(getWindow: () => BrowserWindow | null, quitToInstall
     }
     const error = await shell.openPath(dir);
     if (error) throw new Error(`Could not open the extension folder: ${error}`);
+    // Load unpacked asks for this exact path next, and a file manager's address bar is not
+    // the same thing on every OS. The path is the app's own install folder, not a secret.
+    clipboard.writeText(dir);
     return dir;
+  });
+
+  /**
+   * Opens the extensions page in the saved ChatGPT browser, where Load unpacked lives.
+   * A link cannot do this: browsers refuse to navigate to their internal pages from a web
+   * page or the OS link handler, but accept one as a launch argument.
+   */
+  handle('bridge:openExtensionsPage', async () => {
+    await openInPreferredBrowser(extensionsPageUrl(getConfig().ui.chatBrowser ?? 'chrome'));
+    return true;
   });
 
   handle('bridge:extensionPath', async () => extensionDir());

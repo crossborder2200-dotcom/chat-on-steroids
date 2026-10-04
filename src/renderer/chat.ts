@@ -5917,7 +5917,10 @@ export function initChat(next: Deps): void {
   });
   $('bridgeFolder').addEventListener('click', async () => {
     const dir = await run(api.openExtensionFolder());
-    if (dir) toast(t('Extension folder opened'));
+    if (dir) toast(t('Extension folder opened. Its path is copied — paste it into Load unpacked.'));
+  });
+  $('bridgeExtensionsPage').addEventListener('click', async () => {
+    if (await run(api.openExtensionsPage())) toast(t('Extensions page opened in your ChatGPT browser'));
   });
 
   api.onSessionChanged(scheduleReload);

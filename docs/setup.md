@@ -10,8 +10,8 @@ Read the [responsible-use notice and provider rules](../README.md#responsible-us
 
 1. **Install and open CoS.** Choose the download for your operating system and CPU.
 2. **Choose what ChatGPT may access.** In **Settings → Workspace**, approve a project folder and review the tool permissions.
-3. **Connect the local tools.** Configure a tunnel in **Settings → Setup**, press **Connect**, then add the **Core** app in ChatGPT under **Plugins → Add → Create MCP App**.
-4. **Load the companion extension.** Press **Open extension folder**. In `chrome://extensions`, enable Developer mode, choose **Load unpacked** and select that folder. Pairing is automatic.
+3. **Connect the local tools.** In **Settings → Setup**, choose **Quick start** (a Cloudflare address, no account needed) or the **OpenAI tunnel** (a stable connection), press **Connect**, then add the **Core** app in ChatGPT under **Plugins → Add → Create MCP App**.
+4. **Load the companion extension.** Press **Open extensions page** to open `chrome://extensions` in your ChatGPT browser and enable Developer mode. Press **Open extension folder**, which also copies the folder path, then choose **Load unpacked** and paste it. Pairing is automatic.
 5. **Start a task.** Choose a project and model in CoS, write your request and send it.
 
 Want screen and keyboard control? Enable **Desktop** permissions and connect its separate app. On macOS, also grant Screen Recording and Accessibility in System Settings.
@@ -34,7 +34,7 @@ Core, Desktop and Plugins are separate connectors. Configure each surface you en
 
 ### Other tunnels
 
-**Cloudflare quick tunnel:** connect in CoS and use the displayed public URL as the MCP server URL in ChatGPT. The random path is a secret and changes on restart.
+**Cloudflare quick tunnel (Quick start):** choose **Quick start** at the top of Setup, connect in CoS and use the displayed public URL as the MCP server URL in ChatGPT. No account, tunnel ID or API key is needed. The address and its secret path change on every restart, so paste the new URL into the ChatGPT app after restarting CoS.
 
 **Your own HTTPS tunnel:** forward to the loopback URL shown by CoS and preserve its secret path. Treat the resulting URL like a password.
 

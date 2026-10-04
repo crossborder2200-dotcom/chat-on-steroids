@@ -205,7 +205,6 @@
   ". Repeat for the Desktop plugin if you added it.": "。如果添加了 Desktop 插件，也请重复此操作。",
   "This lets ChatGPT use the plugin without asking for each action. Otherwise, approval prompts can pause Goal, Loop and agent tasks. Your folder and tool permissions in this app still apply.": "这样 ChatGPT 使用插件时就不必逐项询问。否则，审批提示可能暂停目标、循环和智能体任务。本应用中的文件夹和工具权限仍然有效。",
   "Turn on Developer mode at the top right.": "开启右上角的 Developer mode（开发者模式）。",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "点击下方的“打开扩展文件夹”，然后从文件管理器的地址栏复制文件夹路径。",
   "Load unpacked": "Load unpacked（加载已解压的扩展程序）",
   "The extension pairs with this app automatically — there is no code to type.": "扩展会自动与本应用配对，无需输入验证码。",
   "Required for sub-agents:": "子智能体必需：",
@@ -752,7 +751,6 @@
   "Run cleared — every worker ended": "运行已清除 — 所有子智能体已结束",
   "{0} cleared — its slot is free": "{0} 已清除 — 名额已释放",
   "Browser disconnected": "浏览器已断开",
-  "Extension folder opened": "扩展文件夹已打开",
   "{0} tokens used": "已使用 {0} Token",
   "Auto-compaction off for Pro": "Pro 不自动压缩",
   "Auto-compaction at {0} tokens": "达到 {0} Token 时自动压缩",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} 个后台进程正在运行",
   "Diagnostics report": "诊断报告",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "将版本、设置、连接状态和日志保存为一个文件（已移除个人信息），可附加到错误报告中。",
-  "Diagnostics report saved as {0}. Read it before you share it.": "诊断报告已保存为 {0}。分享前请先查看内容。"
+  "Diagnostics report saved as {0}. Read it before you share it.": "诊断报告已保存为 {0}。分享前请先查看内容。",
+  "How should ChatGPT reach this computer?": "ChatGPT 应如何连接到这台电脑？",
+  "Quick start — no account needed": "快速开始 — 无需账号",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "跳过隧道和 API 密钥步骤。使用临时的 Cloudflare 地址，每次重启应用后地址都会变化；重启后，请把新 URL 粘贴到 ChatGPT 中的插件里。",
+  "OpenAI tunnel — stable connection": "OpenAI 隧道 — 稳定连接",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "只需创建一次隧道和 API 密钥。重启后插件仍可继续使用，且不会向公共互联网暴露任何内容。",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "点击下方的“打开扩展程序页面”，它会在你的 ChatGPT 浏览器中打开扩展程序页面。",
+  "Click Open extension folder below. The folder path is copied for you.": "点击下方的“打开扩展文件夹”，文件夹路径会自动复制。",
+  "Open extensions page": "打开扩展程序页面",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "扩展文件夹已打开，路径已复制——请粘贴到 Load unpacked（加载已解压的扩展程序）中。",
+  "Extensions page opened in your ChatGPT browser": "已在你的 ChatGPT 浏览器中打开扩展程序页面"
 }

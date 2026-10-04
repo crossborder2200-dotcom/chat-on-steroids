@@ -544,6 +544,24 @@
               <span class="setup-progress-track" aria-hidden="true"><span class="setup-progress-fill" id="setupProgressFill"></span></span>
             </div>
 
+            <!-- The method decides which steps exist at all: the Cloudflare quick tunnel needs
+                 no account, tunnel ID or API key. It used to sit under Advanced, so every new
+                 user was walked through the longest path without knowing a shorter one existed.
+                 Both choices write the same tunnel.kind as the Advanced select below. -->
+            <fieldset class="setup-method" id="setupMethod">
+              <legend>How should ChatGPT reach this computer?</legend>
+              <label class="setup-method-option">
+                <input type="radio" name="setupMethod" value="cloudflared" />
+                <span class="setup-method-title">Quick start — no account needed</span>
+                <span class="setup-method-hint">Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.</span>
+              </label>
+              <label class="setup-method-option">
+                <input type="radio" name="setupMethod" value="openai" />
+                <span class="setup-method-title">OpenAI tunnel — stable connection</span>
+                <span class="setup-method-hint">Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.</span>
+              </label>
+            </fieldset>
+
             <ol class="wizard" id="wizard">
               <!-- 1 -->
               <li class="step" data-step="folder">
@@ -728,9 +746,9 @@
                 <div class="step-body">
                   <h3>Add the browser extension</h3>
                   <ol class="setup-instructions">
-                    <li>Open <code>chrome://extensions</code>.</li>
+                    <li>Click Open extensions page below. It opens the extensions page in your ChatGPT browser.</li>
                     <li>Turn on Developer mode at the top right.</li>
-                    <li>Click Open extension folder below and copy the folder path from the file manager’s address bar.</li>
+                    <li>Click Open extension folder below. The folder path is copied for you.</li>
                     <li>In the browser, click Load unpacked, paste the copied folder path and select that folder.</li>
                   </ol>
                   <p>The extension pairs with this app automatically — there is no code to type.</p>
@@ -740,6 +758,9 @@
                     coordinate worker chats.
                   </p>
                   <div class="step-actions">
+                    <button class="btn btn-solid" id="bridgeExtensionsPage" type="button">
+                      <i class="ico ph ph-arrow-square-out" aria-hidden="true"></i>Open extensions page
+                    </button>
                     <button class="btn btn-solid" id="bridgeFolder" type="button">
                       <i class="ico ph ph-folder" aria-hidden="true"></i>Open extension folder
                     </button>

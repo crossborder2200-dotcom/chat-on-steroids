@@ -64,6 +64,11 @@ function isExecutableBrowser(candidate: string, platform: NodeJS.Platform): bool
   }
 }
 
+/** The browser's own extensions page, in the spelling that family's address bar shows. */
+export function extensionsPageUrl(browser: ChatBrowser): string {
+  return browser === 'edge' ? 'edge://extensions' : browser === 'brave' ? 'brave://extensions' : 'chrome://extensions';
+}
+
 /**
  * Installations of the selected companion browser, in preference order.
  *

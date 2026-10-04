@@ -698,7 +698,6 @@
   "Run cleared — every worker ended": "Çalıştırma temizlendi — tüm yardımcı ajanlar sonlandırıldı",
   "{0} cleared — its slot is free": "{0} temizlendi — yeri boş",
   "Browser disconnected": "Tarayıcı bağlantısı kesildi",
-  "Extension folder opened": "Tarayıcı eklentisinin klasörü açıldı",
   "{0} tokens used": "{0} token kullanıldı",
   "Auto-compaction off for Pro": "Pro için otomatik sıkıştırma kapalı",
   "Auto-compaction at {0} tokens": "{0} token düzeyinde otomatik sıkıştırma",
@@ -1188,7 +1187,6 @@
   "Browser navigation, input and page JavaScript; native mouse and keyboard where supported.": "Tarayıcıda gezinme, girdi ve sayfa JavaScript'i; desteklenen yerlerde yerel fare ve klavye.",
   "Browser tabs, DOM, console, network and background screenshots; native apps, input and clipboard where supported.": "Tarayıcı sekmeleri, DOM, konsol, ağ ve arka planda ekran görüntüleri; desteklenen yerlerde yerel uygulamalar, girdi ve pano.",
   "Turn on Developer mode at the top right.": "Sağ üstteki Geliştirici modu (Developer mode) seçeneğini açın.",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "Aşağıdaki Tarayıcı eklentisinin klasörünü aç düğmesine tıklayın ve dosya yöneticisinin adres çubuğundan klasör yolunu kopyalayın.",
   "The extension pairs with this app automatically — there is no code to type.": "Uzantı bu uygulamayla otomatik eşleşir — kod girmeniz gerekmez.",
   "When the model ends the turn this way with Goal or Loop on in this chat, the next step is written from that prompt and response source. Otherwise you get a notification.": "Bu sohbette Hedef veya Döngü açıkken model turu bu şekilde bitirirse, sonraki adım o istem ve yanıt kaynağıyla yazılır. Aksi halde bildirim alırsınız.",
   "Not saved to history": "Geçmişe kaydedilmedi",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} arka plan işlemi çalışıyor",
   "Diagnostics report": "Tanılama raporu",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "Sürümleri, ayarları, bağlantı durumunu ve günlüğü kişisel bilgiler çıkarılmış olarak tek bir dosyaya kaydeder; hata bildirimine ekleyebilirsiniz.",
-  "Diagnostics report saved as {0}. Read it before you share it.": "Tanılama raporu {0} olarak kaydedildi. Paylaşmadan önce okuyun."
+  "Diagnostics report saved as {0}. Read it before you share it.": "Tanılama raporu {0} olarak kaydedildi. Paylaşmadan önce okuyun.",
+  "How should ChatGPT reach this computer?": "ChatGPT bu bilgisayara nasıl ulaşsın?",
+  "Quick start — no account needed": "Hızlı başlangıç — hesap gerekmez",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "Tünel ve API anahtarı adımlarını atlar. Uygulama her yeniden başladığında değişen geçici bir Cloudflare adresi kullanır; yeniden başlattıktan sonra yeni URL'yi ChatGPT'deki eklentiye yapıştırın.",
+  "OpenAI tunnel — stable connection": "OpenAI tüneli — kararlı bağlantı",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "Tüneli ve API anahtarını bir kez oluşturun. Eklenti yeniden başlatmalardan sonra da çalışır ve hiçbir şey açık internete açılmaz.",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "Aşağıdaki Uzantılar sayfasını aç düğmesine tıklayın. Uzantılar sayfası ChatGPT tarayıcınızda açılır.",
+  "Click Open extension folder below. The folder path is copied for you.": "Aşağıdaki Tarayıcı eklentisinin klasörünü aç düğmesine tıklayın. Klasör yolu sizin için kopyalanır.",
+  "Open extensions page": "Uzantılar sayfasını aç",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "Tarayıcı eklentisinin klasörü açıldı. Yolu kopyalandı — Paketlenmemiş öğe yükle (Load unpacked) alanına yapıştırın.",
+  "Extensions page opened in your ChatGPT browser": "Uzantılar sayfası ChatGPT tarayıcınızda açıldı"
 }

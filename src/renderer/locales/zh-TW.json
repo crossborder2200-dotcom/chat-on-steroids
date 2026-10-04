@@ -376,7 +376,6 @@
   "Open the Core plugin's Actions list in ChatGPT. Check for read, and for exec_command when command access is enabled in CoS. An empty list needs attention even when the tunnel says Connected.": "在 ChatGPT 中開啟 Core 外掛的 Actions 清單，確認其中有 read；如果在 CoS 中啟用了指令權限，還應有 exec_command。即使隧道顯示已連線，空清單仍需要排查。",
   "For an empty list, check the Core Tunnel ID and the selected ChatGPT workspace, then refresh this plugin's actions. If it stays empty, reconnect the affected tunnel in CoS when no task is running, refresh the plugin again, and use Home → Run checks. Core, Desktop and Plugins each use their own tunnel ID.": "如果清單為空，請核對 Core 的 Tunnel ID 和所選 ChatGPT 工作區，然後重新整理該外掛的操作。如果仍然為空，請在沒有任務執行時在 CoS 中重新連線受影響的隧道，再重新整理外掛，並使用 Home → Run checks 進行檢查。Core、Desktop 和 Plugins 各自使用獨立的隧道 ID。",
   "Turn on Developer mode at the top right.": "開啟右上角的 Developer mode（開發者模式）。",
-  "Click Open extension folder below and copy the folder path from the file manager’s address bar.": "點選下方的「開啟擴充功能資料夾」，然後從檔案總管的網址列複製資料夾路徑。",
   "Load unpacked": "Load unpacked（載入未封裝項目）",
   "The extension pairs with this app automatically — there is no code to type.": "擴充功能會自動與本應用程式配對，無需輸入驗證碼。",
   "Required for sub-agents:": "子代理必需：",
@@ -883,7 +882,6 @@
   "Run cleared — every worker ended": "執行已清除 — 所有子代理已結束",
   "{0} cleared — its slot is free": "{0} 已清除 — 名額已釋放",
   "Browser disconnected": "瀏覽器已中斷連線",
-  "Extension folder opened": "擴充功能資料夾已開啟",
   "{0} tokens used": "已使用 {0} Token",
   "Auto-compaction off for Pro": "Pro 不自動壓縮",
   "Auto-compaction at {0} tokens": "達到 {0} Token 時自動壓縮",
@@ -1825,5 +1823,15 @@
   "{0} background processes running": "{0} 個背景程序正在執行",
   "Diagnostics report": "診斷報告",
   "Save one file with versions, settings, the connection state and the log, with personal details removed, to attach to a bug report.": "將版本、設定、連線狀態和記錄儲存為一個檔案（已移除個人資訊），可附加到錯誤回報中。",
-  "Diagnostics report saved as {0}. Read it before you share it.": "診斷報告已儲存為 {0}。分享前請先檢查內容。"
+  "Diagnostics report saved as {0}. Read it before you share it.": "診斷報告已儲存為 {0}。分享前請先檢查內容。",
+  "How should ChatGPT reach this computer?": "ChatGPT 應如何連線到這台電腦？",
+  "Quick start — no account needed": "快速開始 — 不需要帳號",
+  "Skips the tunnel and API key steps. Uses a temporary Cloudflare address that changes whenever the app restarts; after a restart, paste the new URL into the plugin in ChatGPT.": "略過隧道和 API 金鑰步驟。使用臨時的 Cloudflare 位址，每次重新啟動應用程式後位址都會變更；重新啟動後，請將新的 URL 貼到 ChatGPT 中的外掛。",
+  "OpenAI tunnel — stable connection": "OpenAI 隧道 — 穩定連線",
+  "Create a tunnel and an API key once. The plugin keeps working across restarts, and nothing is exposed to the open internet.": "只需建立一次隧道和 API 金鑰。重新啟動後外掛仍可繼續使用，且不會向公開網際網路暴露任何內容。",
+  "Click Open extensions page below. It opens the extensions page in your ChatGPT browser.": "點選下方的「開啟擴充功能頁面」，它會在你的 ChatGPT 瀏覽器中開啟擴充功能頁面。",
+  "Click Open extension folder below. The folder path is copied for you.": "點選下方的「開啟擴充功能資料夾」，資料夾路徑會自動複製。",
+  "Open extensions page": "開啟擴充功能頁面",
+  "Extension folder opened. Its path is copied — paste it into Load unpacked.": "擴充功能資料夾已開啟，路徑已複製——請貼到 Load unpacked（載入未封裝項目）中。",
+  "Extensions page opened in your ChatGPT browser": "已在你的 ChatGPT 瀏覽器中開啟擴充功能頁面"
 }
